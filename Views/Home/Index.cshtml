@@ -1,0 +1,66 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+@model List<Data>
+
+<table class="grid table" id="Datas">
+    <tr>
+        <th>Id</th>
+        <th>Context</th>
+        <th>Processes</th>
+
+    </tr>
+    @foreach (var data in Model)
+    {
+        <tr>
+            <td>@data.Id</td>
+            <td>@data.Context</td>
+            <td><a class="details btn btn-dark">Get Data</a></td>
+        </tr>
+    }
+</table>
+
+<div class="modal fade" id="partialModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Data Modal</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                ...
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+
+    <script type="text/javascript">
+        $(function () {
+            $("#Datas .details").click(function () {
+                var id = $(this).closest("tr").find("td").eq(0).html();
+
+                $.ajax({
+                    type: "GET",
+                    url: "/Home/GetData",
+                    data: { "id": id },
+                    success: function (response) {
+                        $("#partialModal").find(".modal-body").html(response);
+                        $("#partialModal").modal('show');
+                    },
+                    failure: function (response) {
+                        alert(response.responseText);
+                    },
+                    error: function (response) {
+                        alert(response.responseText);
+                    }
+                });
+            });
+        });
+    </script>
+}
